@@ -6,6 +6,11 @@ from skimage.io import imread, imshow, imread_collection, concatenate_images
 from skimage.transform import resize
 from skimage import io
 import pims
+import imutils
+import cv2
+from scipy import ndimage 
+from skimage.segmentation import watershed
+from skimage.feature import peak_local_max
 
 # import a tif as stack
 def stackloader(filename, dir_in='',plot=True):
@@ -157,3 +162,65 @@ def num(dirname=''):
                 if dir_1[j]!='.DS_Store':
                     n+=1
     return n
+
+def sep_count_cells(filename=''):
+    """"""
+    #separate the cells that overlap with each other and 
+    # count the number of cells 
+    
+    #Parameters
+    #----------
+    #filename: string
+    #    The name of the files
+    
+    #Returns
+    #-------
+    #The total number of the tifs in the whole dir
+    """"""
+    paths=filename+'.tif'
+	# construct the argument parse and parse the arguments
+	# load the image and perform pyramid mean shift filtering
+	# to aid the thresholding step
+    image = cv2.imread(paths)
+    shifted = cv2.pyrMeanShiftFiltering(image, 20, 55)
+	# convert the mean shift image to grayscale, then apply
+	# Otsu's thresholding
+    gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(gray, 10, 255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+ 
+	# compute the exact Euclidean distance from every binary
+	# pixel to the nearest zero pixel, then find peaks in this
+	# distance map
+    D = ndimage.distance_transform_edt(thresh)
+    localMax = peak_local_max(D, indices=False, min_distance=30, labels=thresh)
+	# perform a connected component analysis on the local peaks,
+	# using 8-connectivity, then appy the Watershed algorithm
+    markers = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
+    labels = watershed(-D, markers, mask=thresh)
+    print("[INFO] {} unique segments found".format(len(np.unique(labels)) - 1))
+    plt.figure(figsize=(10,10))
+    plt.imshow(labels,cmap=plt.cm.nipy_spectral)
+    plt.axis('off') 
+	# loop over the unique labels returned by the Watershed
+	# algorithm
+    for label in np.unique(labels):
+		# if the label is zero, we are examining the 'background'
+		# so simply ignore it
+        if label == 0:
+            continue
+		# otherwise, allocate memory for the label region and draw
+		# it on the mask
+        mask = np.zeros(gray.shape, dtype="uint8")
+        mask[labels == label] = 255
+		# detect contours in the mask and grab the largest one
+        cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        c = max(cnts, key=cv2.contourArea)
+		# draw a circle enclosing the object
+        ((x, y), r) = cv2.minEnclosingCircle(c)
+        cv2.circle(image, (int(x), int(y)), int(r), (0, 255, 0), 2)
+        cv2.putText(image, "#{}".format(label), (int(x) - 10, int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+	# show the output image
+	#plt.figure(figsize=(10,10))
+	#plt.imshow(image)
+	#plt.axis('off')
