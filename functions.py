@@ -10,20 +10,20 @@ import pims
 # import a tif as stack
 def stackloader(filename, dir_in='',plot=True):
     """"""
-    load and seperate 4D tif pictures into 20 2D figures and then plot them if needed
+    #load and seperate 4D tif pictures into 20 2D figures and then plot them if needed
     
-    Parameters
-    ----------
-    filename: string
-        The name of the files
-    dir_in: string
-        Specific directory of the files, defaults to empty
-    plot: boolean
-        True to plot the figures, False only to load the data rather than plot the figures
+    #Parameters
+    #----------
+    #filename: string
+    #    The name of the files
+    #dir_in: string
+    #    Specific directory of the files, defaults to empty
+    #plot: boolean
+    #    True to plot the figures, False only to load the data rather than plot the figures
     
-    Returns
-    -------
-    There are 4 returns: value of nuclei and nps as well as number of rows and columns: nrows,ncols
+    #Returns
+    #-------
+    #There are 4 returns: value of nuclei and nps as well as number of rows and columns: nrows,ncols
     """"""
     #load data
     if dir_in=='':
@@ -56,23 +56,23 @@ def stackloader(filename, dir_in='',plot=True):
 #Change tif into 2d picture and plot it
 def plotpic(filename, dir_in='',plot=True):
     """"""
-    transfor 4D tif pictures into 2D figures and then plot the first 2d pictures
+    #transfor 4D tif pictures into 2D figures and then plot the first 2d pictures
     
-    Parameters
-    ----------
-    filename: string
-        The name of the files
-    dir_in: string
-        Specific directory of the files, defaults to empty
-    plot: boolean
-        True to plot the figures
+    #Parameters
+    #----------
+    #filename: string
+    #    The name of the files
+    #dir_in: string
+    #    Specific directory of the files, defaults to empty
+    #plot: boolean
+    #    True to plot the figures
     """"""
     
     if dir_in=='':
         data='./'+filename# if the tif in the same folder as the code does.
     else:
         data=dir_in+filename# if dir_in not empty, use dir to open the picture
-    IM= io.imread(data)[10]#read 1th 2d-picture
+    IM= io.imread(data)[0]#read 1th 2d-picture
     IM_MAX= np.max(IM, axis=0)
     IM_MAX= resize(IM_MAX, (512,512), mode='constant', preserve_range=True)
     if plot==True:
@@ -83,14 +83,14 @@ def plotpic(filename, dir_in='',plot=True):
 #In folders, change all tifs into 2d pictures and save them.
 def filefolder(dirname='',plot=True):
     """"""
-    load, plot and save 4D tif pictures into 2D figures in given folders 
+    #load, plot and save 4D tif pictures into 2D figures in given folders 
     
-    Parameters
-    ----------
-    dirname: string
-        General directory of the file, defaults to empty   
-    plot: boolean
-        True to plot and save the figures in a given folder
+    #Parameters
+    #----------
+    #dirname: string
+    #    General directory of the file, defaults to empty   
+    #plot: boolean
+    #    True to plot and save the figures in a given folder
     """"""
     
     if dirname!='':# if dirname is not empty, use given dir
@@ -128,16 +128,16 @@ def filefolder(dirname='',plot=True):
 #count the number of pictures                        
 def num(dirname=''):
     """"""
-    count the number of the tifs in the directory
+    #count the number of the tifs in the directory
     
-    Parameters
-    ----------
-    dirname: string
-        The dir of the files
+    #Parameters
+    #----------
+    #dirname: string
+    #    The dir of the files
     
-    Returns
-    -------
-    The total number of the tifs in the whole dir
+    #Returns
+    #-------
+    #The total number of the tifs in the whole dir
     """"""
     
     if dirname!='':# if dirname is not empty, use given dir
