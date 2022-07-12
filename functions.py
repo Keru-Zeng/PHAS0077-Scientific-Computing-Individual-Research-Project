@@ -77,7 +77,7 @@ def plotpic(filename, dir_in='',plot=True):
         data='./'+filename# if the tif in the same folder as the code does.
     else:
         data=dir_in+filename# if dir_in not empty, use dir to open the picture
-    IM= io.imread(data)[0]#read 1th 2d-picture
+    IM= io.imread(data)[10]#read 1th 2d-picture
     IM_MAX= np.max(IM, axis=0)
     IM_MAX= resize(IM_MAX, (512,512), mode='constant', preserve_range=True)
     if plot==True:
