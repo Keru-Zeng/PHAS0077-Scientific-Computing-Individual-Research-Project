@@ -141,8 +141,8 @@ def num(dirname=''):
     #    The dir of the files
     
     #Returns
-    #-------
-    #The total number of the tifs in the whole dir
+    #----------
+    # The total number of the tifs in the whole dir
     """"""
     
     if dirname!='':# if dirname is not empty, use given dir
@@ -173,11 +173,8 @@ def sep_count_cells(filename=''):
     #filename: string
     #    The name of the files
     
-    #Returns
-    #-------
-    #The total number of the tifs in the whole dir
     """"""
-    paths=filename+'.tif'
+    paths=filename
 	# construct the argument parse and parse the arguments
 	# load the image and perform pyramid mean shift filtering
 	# to aid the thresholding step
