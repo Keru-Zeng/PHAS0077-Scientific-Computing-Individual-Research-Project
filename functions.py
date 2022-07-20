@@ -245,7 +245,7 @@ def data_aug(X_train,Y_train):
 
     return x,y,x_val,y_val
 
-def u_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
+def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
     """"""
     #build the U-net model
     
@@ -316,7 +316,6 @@ def u_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
 
     outputs = Conv2D(1, (1, 1), activation='sigmoid') (c9)
 
-    model = Model(inputs=[inputs], outputs=[outputs])
-    return model
+    return Model(inputs=[inputs], outputs=[outputs])
 
 
