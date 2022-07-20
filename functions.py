@@ -11,6 +11,7 @@ import cv2
 from scipy import ndimage 
 from skimage.segmentation import watershed
 from skimage.feature import peak_local_max
+from keras.preprocessing import image
 
 # import a tif as stack
 def stackloader(filename, dir_in='',plot=True):
@@ -199,3 +200,41 @@ def sep_count_cells(filename=''):
     plt.imshow(labels,cmap=plt.cm.nipy_spectral)
     plt.axis('off') 
 	
+def data_aug(X_train,Y_train):
+    """"""
+    #build data augmentation to avoid the overfitting of a model 
+    # and also to increase the ability of model to generalize.
+    
+    #Parameters
+    #----------
+    #X_train: numpy array
+    #    The X train set of data
+    #Y_train: numpy array
+    #    The Y train set of data
+    #Returns
+    #----------
+    # The augmented data of x,y,x validation and y validation data sets
+    """"""
+    # Creating the training Image and Mask generator (zoom in range[0.8,1.2])
+    image_datagen = image.ImageDataGenerator(shear_range=0.5, rotation_range=50, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2, fill_mode='reflect')
+    mask_datagen = image.ImageDataGenerator(shear_range=0.5, rotation_range=50, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2, fill_mode='reflect')
+
+    # Keep the same seed for image and mask generators so they fit together
+    image_datagen.fit(X_train[:int(X_train.shape[0]*0.9)], augment=True, seed=42)#90% train data to fit
+    mask_datagen.fit(Y_train[:int(Y_train.shape[0]*0.9)], augment=True, seed=42)
+
+    # flow method generate batch of augmented data
+    x=image_datagen.flow(X_train[:int(X_train.shape[0]*0.9)],batch_size=10,shuffle=True, seed=42)
+    y=mask_datagen.flow(Y_train[:int(Y_train.shape[0]*0.9)],batch_size=10,shuffle=True, seed=42)
+
+    # Creating the validation Image and Mask generator
+    image_datagen_val = image.ImageDataGenerator()
+    mask_datagen_val = image.ImageDataGenerator()
+
+    image_datagen_val.fit(X_train[int(X_train.shape[0]*0.9):], augment=True, seed=42)#other 10% apart from 90%
+    mask_datagen_val.fit(Y_train[int(Y_train.shape[0]*0.9):], augment=True, seed=42)
+
+    x_val=image_datagen_val.flow(X_train[int(X_train.shape[0]*0.9):],batch_size=10,shuffle=True, seed=42)
+    y_val=mask_datagen_val.flow(Y_train[int(Y_train.shape[0]*0.9):],batch_size=10,shuffle=True, seed=42)
+    
+    return x,y,x_val,y_val
