@@ -16,7 +16,6 @@ from keras.layers import Input
 from keras.layers.core import Dropout, Lambda
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
-#from keras.layers.merge import concatenate
 from keras.layers import concatenate
 from keras.models import Model
 
@@ -136,6 +135,31 @@ def filefolder(dirname='',plot=True):
                             os.makedirs(figure_save_path2)   
                         plt.savefig(os.path.join(figure_save_path2 , '{}.png'.format(dir_1[j])),bbox_inches='tight', pad_inches = -0.1)
                         plt.close()#close the figures, so the plot will not display
+
+# binarize the images
+def improve_reso():
+    """"""
+    # In order to do a binary classification,
+    # convert all values in images above 0 to 1.
+    # So, picture only have two values {0,1}, which have accurate resolution.
+    """"""
+    path="train_set/"
+    dirs=os.listdir(path) #walk through all files in path
+    n=len(dirs)
+    for i in range(0,n):
+        name=path+dirs[i]+"/masks/"
+        dirss=os.listdir(name)
+        nn=len(dirss)
+        for j in range(0,nn):
+            names=name+dirss[j]
+            mask=io.imread(names) # read images
+            # need to binarize the images, convert all values above 0 to 1 to assign a pixel value of 1 for class
+            masked=np.where(mask>0,1,mask) 
+            plt.imshow(masked,cmap='gray')
+            plt.axis('off')
+            figure_save_path ='train_set/'+dirs[i]+'/masks/'   
+            plt.savefig(os.path.join(figure_save_path , '{}'.format(dirss[j])),bbox_inches='tight', pad_inches = -0.1)
+            plt.close() # reduce memory
 
 #count the number of pictures                        
 def num(dirname=''):
