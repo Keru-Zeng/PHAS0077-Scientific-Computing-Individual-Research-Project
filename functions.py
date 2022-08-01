@@ -137,16 +137,24 @@ def filefolder(dirname='',plot=True):
                         plt.close()#close the figures, so the plot will not display
 
 # binarize the images
-def improve_reso():
+def improve_reso(k):
     """"""
     # In order to do a binary classification,
     # convert all values in images above 0 to 1.
     # So, picture only have two values {0,1}, which have accurate resolution.
+    #Parameters
+    #----------
+    #k: number
+    #    input a iterate number   
     """"""
     path="train_set/"
     dirs=os.listdir(path) #walk through all files in path
     n=len(dirs)
-    for i in range(0,n):
+    if k<n:
+        N=k
+    else:
+        N=n
+    for i in range(0,N):
         name=path+dirs[i]+"/masks/"
         dirss=os.listdir(name)
         nn=len(dirss)
