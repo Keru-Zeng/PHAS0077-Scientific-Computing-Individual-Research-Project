@@ -16,7 +16,8 @@ from keras.layers import Input
 from keras.layers.core import Dropout, Lambda
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
-from keras.layers.merge import concatenate
+#from keras.layers.merge import concatenate
+from keras.layers import concatenate
 from keras.models import Model
 
 # import a tif as stack
@@ -112,7 +113,6 @@ def filefolder(dirname='',plot=True):
     dirs=os.listdir(dirname)# read all sub-folders' names in dirname folder
     n_files=len(dirs)
     for i in range(0,n_files):
-    
         if dirs[i]!='.DS_Store':
             dataname=dirname+dirs[i]+'/'
             data=dataname+'tifs/'# for tifs subsub-folder in sub-folders,
@@ -134,7 +134,7 @@ def filefolder(dirname='',plot=True):
                         plt.savefig(os.path.join(figure_save_path , '{}'.format(dir_1[j])),bbox_inches='tight', pad_inches = -0.1)
                         if not os.path.exists(figure_save_path2):# if directory not exist, create it
                             os.makedirs(figure_save_path2)   
-                        plt.savefig(os.path.join(figure_save_path2 , '{}'.format(dir_1[j])),bbox_inches='tight', pad_inches = -0.1)
+                        plt.savefig(os.path.join(figure_save_path2 , '{}.png'.format(dir_1[j])),bbox_inches='tight', pad_inches = -0.1)
                         plt.close()#close the figures, so the plot will not display
 
 #count the number of pictures                        
