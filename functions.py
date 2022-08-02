@@ -2,11 +2,9 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage.io import imread, imshow, imread_collection, concatenate_images
 from skimage.transform import resize
 from skimage import io
 import pims
-import imutils
 import cv2
 from scipy import ndimage 
 from skimage.segmentation import watershed
@@ -222,19 +220,18 @@ def sep_count_cells(filename=''):
 	# Otsu's thresholding
     gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
     thresh = cv2.threshold(gray, 10, 255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
- 
 	# compute the exact Euclidean distance from every binary
 	# pixel to the nearest zero pixel, then find peaks in this
 	# distance map
-    D = ndimage.distance_transform_edt(thresh)
-    localMax = peak_local_max(D, indices=False, min_distance=50, labels=thresh)
+    d = ndimage.distance_transform_edt(thresh)
+    localMax = peak_local_max(d, indices=False, min_distance=50, labels=thresh)
 	# perform a connected component analysis on the local peaks,
 	# using 8-connectivity, then appy the Watershed algorithm
-    markers = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
-    labels = watershed(-D, markers, mask=thresh)
+    marker = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
+    label = watershed(-d, marker, mask=thresh)
     #print("Note: {} unique segments found".format(len(np.unique(labels)) - 1))
     plt.figure(figsize=(10,10))
-    plt.imshow(labels,cmap=plt.cm.nipy_spectral)
+    plt.imshow(label,cmap=plt.cm.nipy_spectral)
     plt.axis('off') 
 	
 def data_aug(X_train,Y_train):
@@ -290,7 +287,7 @@ def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
         The input image channels of parameter
     Returns
     ----------
-     The build-in U-net model
+    The build-in U-net model
     """
 
 
@@ -350,3 +347,28 @@ def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
     return Model(inputs=[inputs], outputs=[outputs])
 
 
+def count(test_ids,TEST_PATH):
+    """
+    count the number of items in test set
+    
+    Parameters
+    ----------
+    test_ids: string
+        the file name in test set
+    TEST_PATH: string
+        directory of the test set    
+
+    Returns
+    ----------
+    the number of items in test set
+    """
+    ID=0
+    ID_dir={}
+    for id_ in test_ids:
+    path = TEST_PATH + id_+'/images/'
+    dirs=os.listdir(path)
+    k=len(dirs)
+    for i in range(0,k): 
+        ID_dir[ID]=dirs[i]
+        ID+=1  
+    return ID_dir     

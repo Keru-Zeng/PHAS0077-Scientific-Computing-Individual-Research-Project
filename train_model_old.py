@@ -1,22 +1,16 @@
 #These codes are modified based on Abhinav Sagar, Nucleus Segmentation using U-Net, 
-https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
+# https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
 
 #import useful libraries
 import os
 import sys
-import random
 import warnings
 import numpy as np
-import cv2
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from itertools import chain
-from skimage.io import imread, imshow, imread_collection, concatenate_images
+from skimage.io import imread
 from skimage.transform import resize
-from tensorflow import keras
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from skimage import io
-import tensorflow as tf
 from functions import *
 
 # set parameter
