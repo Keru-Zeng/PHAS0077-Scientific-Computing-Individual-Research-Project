@@ -21,22 +21,22 @@ from keras.models import Model
 
 # import a tif as stack
 def stackloader(filename, dir_in='',plot=True):
-    """"""
-    #load and seperate 4D tif pictures into 20 2D figures and then plot them if needed
+    """
+    load and seperate 4D tif pictures into 20 2D figures and then plot them if needed
     
-    #Parameters
-    #----------
-    #filename: string
-    #    The name of the files
-    #dir_in: string
-    #    Specific directory of the files, defaults to empty
-    #plot: boolean
-    #    True to plot the figures, False only to load the data rather than plot the figures
+    Parameters
+    ----------
+    filename: string
+        The name of the files
+    dir_in: string
+        Specific directory of the files, defaults to empty
+    plot: boolean
+        True to plot the figures, False only to load the data rather than plot the figures
     
-    #Returns
-    #-------
-    #There are 4 returns: value of nuclei and nps as well as number of rows and columns: nrows,ncols
-    """"""
+    Returns
+    -------
+    There are 4 returns: value of nuclei and nps as well as number of rows and columns: nrows,ncols
+    """
     #load data
     if dir_in=='':
         data=pims.TiffStack('./'+filename)# if the tif in the same folder as the code does.
@@ -67,18 +67,18 @@ def stackloader(filename, dir_in='',plot=True):
 
 #Change tif into 2d picture and plot it
 def plotpic(filename, dir_in='',plot=True):
-    """"""
-    #transfor 4D tif pictures into 2D figures and then plot the first 2d pictures
+    """
+    transfor 4D tif pictures into 2D figures and then plot the first 2d pictures
     
-    #Parameters
-    #----------
-    #filename: string
-    #    The name of the files
-    #dir_in: string
-    #    Specific directory of the files, defaults to empty
-    #plot: boolean
-    #    True to plot the figures
-    """"""
+    Parameters
+    ----------
+    filename: string
+        The name of the files
+    dir_in: string
+        Specific directory of the files, defaults to empty
+    plot: boolean
+        True to plot the figures
+    """
     
     if dir_in=='':
         data='./'+filename# if the tif in the same folder as the code does.
@@ -94,16 +94,16 @@ def plotpic(filename, dir_in='',plot=True):
         
 #In folders, change all tifs into 2d pictures and save them.
 def filefolder(dirname='',plot=True):
-    """"""
-    #load, plot and save 4D tif pictures into 2D figures in given folders 
+    """
+    load, plot and save 4D tif pictures into 2D figures in given folders 
     
-    #Parameters
-    #----------
-    #dirname: string
-    #    General directory of the file, defaults to empty   
-    #plot: boolean
-    #    True to plot and save the figures in a given folder
-    """"""
+    Parameters
+    ----------
+    dirname: string
+        General directory of the file, defaults to empty   
+    plot: boolean
+        True to plot and save the figures in a given folder
+    """
     
     if dirname!='':# if dirname is not empty, use given dir
             dirname=dirname
@@ -138,15 +138,15 @@ def filefolder(dirname='',plot=True):
 
 # binarize the images
 def improve_reso(k):
-    """"""
-    # In order to do a binary classification,
-    # convert all values in images above 0 to 1.
-    # So, picture only have two values {0,1}, which have accurate resolution.
-    #Parameters
-    #----------
-    #k: number
-    #    input a iterate number   
-    """"""
+    """
+    In order to do a binary classification, convert all values in images above 0 to 1.
+    So, picture only have two values {0,1}, which have accurate resolution.
+
+    Parameters
+    ----------
+    k: number
+        input a iterate number   
+    """
     path="train_set/"
     dirs=os.listdir(path) #walk through all files in path
     n=len(dirs)
@@ -154,7 +154,7 @@ def improve_reso(k):
         N=k
     else:
         N=n
-    for i in range(0,N):
+    for i in range(0,N):#walk through specified number of files
         name=path+dirs[i]+"/masks/"
         dirss=os.listdir(name)
         nn=len(dirss)
@@ -171,18 +171,18 @@ def improve_reso(k):
 
 #count the number of pictures                        
 def num(dirname=''):
-    """"""
-    #count the number of the tifs in the directory
+    """
+    count the number of the tifs in the directory
     
-    #Parameters
-    #----------
-    #dirname: string
-    #    The dir of the files
+    Parameters
+    ----------
+    dirname: string
+        The dir of the files
     
-    #Returns
-    #----------
-    # The total number of the tifs in the whole dir
-    """"""
+    Returns
+    ----------
+    The total number of the tifs in the whole dir
+    """
     
     if dirname!='':# if dirname is not empty, use given dir
         dirname=dirname
@@ -203,16 +203,15 @@ def num(dirname=''):
     return n
 
 def sep_count_cells(filename=''):
-    """"""
-    #separate the cells that overlap with each other and 
-    # count the number of cells 
+    """
+    separate the cells that overlap with each other and count the number of cells 
     
-    #Parameters
-    #----------
-    #filename: string
-    #    The name of the files
+    Parameters
+    ----------
+    filename: string
+        The name of the files
     
-    """"""
+    """
     paths=filename
 	# construct the argument parse and parse the arguments
 	# load the image and perform pyramid mean shift filtering
@@ -233,26 +232,26 @@ def sep_count_cells(filename=''):
 	# using 8-connectivity, then appy the Watershed algorithm
     markers = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
     labels = watershed(-D, markers, mask=thresh)
-    print("Note: {} unique segments found".format(len(np.unique(labels)) - 1))
+    #print("Note: {} unique segments found".format(len(np.unique(labels)) - 1))
     plt.figure(figsize=(10,10))
     plt.imshow(labels,cmap=plt.cm.nipy_spectral)
     plt.axis('off') 
 	
 def data_aug(X_train,Y_train):
-    """"""
-    #build data augmentation to avoid the overfitting of a model 
-    # and also to increase the ability of model to generalize.
+    """
+    build data augmentation to avoid the overfitting of a model 
+    and also to increase the ability of model to generalize.
     
-    #Parameters
-    #----------
-    #X_train: numpy array
-    #    The X train set of data
-    #Y_train: numpy array
-    #    The Y train set of data
-    #Returns
-    #----------
-    # The augmented data of x,y,x validation and y validation data sets
-    """"""
+    Parameters
+    ----------
+    X_train: numpy array
+        The X train set of data
+    Y_train: numpy array
+        The Y train set of data
+    Returns
+    ----------
+    The augmented data of x,y,x validation and y validation data sets
+    """
     # Creating the training Image and Mask generator (zoom in range[0.8,1.2])
     image_datagen = image.ImageDataGenerator(shear_range=0.5, rotation_range=50, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2, fill_mode='reflect')
     mask_datagen = image.ImageDataGenerator(shear_range=0.5, rotation_range=50, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2, fill_mode='reflect')
@@ -278,21 +277,21 @@ def data_aug(X_train,Y_train):
     return x,y,x_val,y_val
 
 def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
-    """"""
-    #build the U-net model
+    """
+    build the U-net model
     
-    #Parameters
-    #----------
-    #IMG_HEIGHT: number
-    #    The input image height of parameter
-    #IMG_WIDTH: number
-    #    The input image width of parameter
-    #IMG_CHANNELS: number
-    #    The input image channels of parameter
-    #Returns
-    #----------
-    # The build-in U-net model
-    """"""
+    Parameters
+    ----------
+    IMG_HEIGHT: number
+        The input image height of parameter
+    IMG_WIDTH: number
+        The input image width of parameter
+    IMG_CHANNELS: number
+        The input image channels of parameter
+    Returns
+    ----------
+     The build-in U-net model
+    """
 
 
     inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
