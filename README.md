@@ -35,13 +35,13 @@ train_model_old and test_model_old are used to build old model and predict and s
 train_model_new and test_model_new are used to build new model and predict and segment cells using new model.
 
 ## Reference
-These codes are modified mainly base on 
+These codes are modified base on 
 @misc{sagarkaggle,
   Author = {Abhinav Sagar},
   Title = {Kaggle Solutions},
   Year = {2019},
   Journal = {Github},
 }
+,which could be accessed from: https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
 
-Accessed from: https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
-
+and "Label image regions", which could be accessd from https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_label.html
