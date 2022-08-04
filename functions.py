@@ -1,4 +1,4 @@
-#import useful libraries
+# import useful libraries
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +6,7 @@ from skimage.transform import resize
 from skimage import io
 import pims
 import cv2
-from scipy import ndimage 
+from scipy import ndimage
 from skimage.segmentation import watershed
 from skimage.feature import peak_local_max
 from keras.preprocessing import image
@@ -17,11 +17,11 @@ from keras.layers.pooling import MaxPooling2D
 from keras.layers import concatenate
 from keras.models import Model
 
-#show the 4D PLA and load data
-def stackloader(filename, dir_in='',plot=True):
+# show the 4D PLA and load data
+def stackloader(filename, dir_in="", plot=True):
     """
     load and seperate 4D PLA pictures into 20 2D figures and then plot them if needed
-    
+
     Parameters
     ----------
     filename: string
@@ -30,44 +30,54 @@ def stackloader(filename, dir_in='',plot=True):
         Specific directory of the files, defaults to empty
     plot: boolean
         True to plot the figures, False only to load the data rather than plot the figures
-    
+
     Returns
     -------
     There are 4 returns: value of nuclei and nps as well as number of rows and columns
     """
-    #load data
-    if dir_in=='':
-        data=pims.TiffStack('./'+filename)#if the tif in the same folder as the code does.
+    # load data
+    if dir_in == "":
+        data = pims.TiffStack(
+            "./" + filename
+        )  # if the tif in the same folder as the code does.
     else:
-        data=pims.TiffStack(dir_in+filename)#if the dir is not empty, use the dir to open the tif
-    
-    nuclei=np.array(data[1::2])#start from 1 with step 2, i.e.1,3,5,7,9...
-    nps=np.array(data[::2])#start from 0 with step size 2, i.e. 0,2,4,6,8...
-    z_size,y_size,x_size=np.shape(nuclei)#shape the nuclei data (a square matrix)
-    #print(np.shape(data)) #(40,512,521),512 entries in x y axes,with 20 in Z and 2 channel,total 40
-    nrows=np.int(np.ceil(np.sqrt(z_size)))
-    ncols=np.int(z_size//nrows+1)
-    if plot==True:
-        fig,axes=plt.subplots(nrows,ncols,figsize=(3*ncols,3*nrows))
+        data = pims.TiffStack(
+            dir_in + filename
+        )  # if the dir is not empty, use the dir to open the tif
+
+    nuclei = np.array(data[1::2])  # start from 1 with step 2, i.e.1,3,5,7,9...
+    nps = np.array(data[::2])  # start from 0 with step size 2, i.e. 0,2,4,6,8...
+    z_size, y_size, x_size = np.shape(nuclei)  # shape the nuclei data (a square matrix)
+    # print(np.shape(data)) #(40,512,521),512 entries in x y axes,with 20 in Z and 2 channel,total 40
+    nrows = np.int(np.ceil(np.sqrt(z_size)))
+    ncols = np.int(z_size // nrows + 1)
+    if plot == True:
+        fig, axes = plt.subplots(nrows, ncols, figsize=(3 * ncols, 3 * nrows))
         for n in range(z_size):
-            i=n//ncols
-            j=n%ncols
-            axes[i,j].imshow(nuclei[n],interpolation='nearest',cmap='gray')#total 20 necleis,total 20 pictures
-        for ax in axes.ravel():#returns contiguous flattened array(ravel() return an array to 1D) 
-            if not(len(ax.images)):
-                fig.delaxes(ax)#remove the Axes ax from its figure.
+            i = n // ncols
+            j = n % ncols
+            axes[i, j].imshow(
+                nuclei[n], interpolation="nearest", cmap="gray"
+            )  # total 20 necleis,total 20 pictures
+        for (
+            ax
+        ) in (
+            axes.ravel()
+        ):  # returns contiguous flattened array(ravel() return an array to 1D)
+            if not (len(ax.images)):
+                fig.delaxes(ax)  # remove the Axes ax from its figure.
         fig.tight_layout()
         plt.show()
-        plt.close()#reduce memory after function.
-        
-    return nuclei, nps, nrows,ncols
+        plt.close()  # reduce memory after function.
+
+    return nuclei, nps, nrows, ncols
 
 
-#Convert PLA data into 2D picture and plot it
-def plotpic(filename, dir_in='',plot=True):
+# Convert PLA data into 2D picture and plot it
+def plotpic(filename, dir_in="", plot=True):
     """
     convert 4D PLA images into 2D figures and then plot them
-    
+
     Parameters
     ----------
     filename: string
@@ -77,62 +87,71 @@ def plotpic(filename, dir_in='',plot=True):
     plot: boolean
         True to plot the figures
     """
-    
-    if dir_in=='':
-        data='./'+filename#if PLA data in the same folder as the code does.
+
+    if dir_in == "":
+        data = "./" + filename  # if PLA data in the same folder as the code does.
     else:
-        data=dir_in+filename# if directory not empty, use directory to open the picture
-    IM= io.imread(data)[10]
-    IM_MAX= np.max(IM, axis=0)
-    IM_MAX= resize(IM_MAX, (512,512), mode='constant', preserve_range=True)
-    if plot==True:
-        plt.imshow(IM_MAX,cmap='gray')
-        plt.axis('off')
-        
-        
-#In folders, change all PLA into 2D pictures and save them.
-def filefolder(dirname='',plot=True):
+        data = (
+            dir_in + filename
+        )  # if directory not empty, use directory to open the picture
+    IM = io.imread(data)[10]
+    IM_MAX = np.max(IM, axis=0)
+    IM_MAX = resize(IM_MAX, (512, 512), mode="constant", preserve_range=True)
+    if plot == True:
+        plt.imshow(IM_MAX, cmap="gray")
+        plt.axis("off")
+
+
+# In folders, change all PLA into 2D pictures and save them.
+def filefolder(dirname="", plot=True):
     """
-    load, plot and save 4D PLA pictures into 2D figures in given folders 
-    
+    load, plot and save 4D PLA pictures into 2D figures in given folders
+
     Parameters
     ----------
     dirname: string
-        General directory of the file, defaults to empty   
+        General directory of the file, defaults to empty
     plot: boolean
         True to plot and save the figures in a given folder
     """
-    
-    if dirname!='':#if dirname is not empty, use given dir
-            dirname=dirname
-    else:#if dirname is empty
-            dirname='./'+dirname
-    dirs=os.listdir(dirname)#read all sub-folders' names in dirname folder
-    n_files=len(dirs)
-    for i in range(0,n_files):
-        if dirs[i]!='.DS_Store':
-            dataname=dirname+dirs[i]+'/'
-            data=dataname+'tifs/'
-            dir_1=os.listdir(data)#read all PLA pictures' names
-            k=len(dir_1)
-            for j in range(0,k):
-                if dir_1[j]!='.DS_Store':#check whether it is tifs folders
-                    name=data+dir_1[j]
-                    IM= io.imread(name)[0]
-                    IM_MAX= np.max(IM, axis=0)
-                    IM_MAX= resize(IM_MAX, (512,512), mode='constant', preserve_range=True)
-                    if plot==True:
-                        plt.imshow(IM_MAX,cmap='gray')
-                        plt.axis('off')
-                        figure_save_path ='test_set/'+dirs[i]+'/images/'# dir to save pictures
-                        figure_save_path2 ='train_set/'+dirs[i]+'/images/'
-                        if not os.path.exists(figure_save_path):# if directory not exist, create it
-                            os.makedirs(figure_save_path)   
-                        plt.savefig(os.path.join(figure_save_path , '{}'.format(dir_1[j])), bbox_inches='tight', pad_inches = -0.1)
-                        if not os.path.exists(figure_save_path2):# if directory not exist, create it
-                            os.makedirs(figure_save_path2)   
-                        plt.savefig(os.path.join(figure_save_path2 , '{}.png'.format(dir_1[j])), bbox_inches='tight', pad_inches = -0.1)
-                        plt.close()#close figures, so the plot will not display
+
+    if dirname != "":  # if dirname is not empty, use given dir
+        dirname = dirname
+    else:  # if dirname is empty
+        dirname = "./" + dirname
+    dirs = os.listdir(dirname)  # read all sub-folders' names in dirname folder
+    n_files = len(dirs)
+    for i in range(0, n_files):
+        if dirs[i] != ".DS_Store":
+            dataname = dirname + dirs[i] + "/"
+            data = dataname + "tifs/"
+            dir_1 = os.listdir(data)  # read all PLA pictures' names
+            k = len(dir_1)
+            for j in range(0, k):
+                if dir_1[j] != ".DS_Store":  # check whether it is tifs folders
+                    name = data + dir_1[j]
+                    IM = io.imread(name)[0]
+                    IM_MAX = np.max(IM, axis=0)
+                    IM_MAX = resize(
+                        IM_MAX, (512, 512), mode="constant", preserve_range=True
+                    )
+                    if plot == True:
+                        plt.imshow(IM_MAX, cmap="gray")
+                        plt.axis("off")
+                        figure_save_path = (
+                            "test_set/" + dirs[i] + "/images/"
+                        )  # dir to save pictures
+                        if not os.path.exists(
+                            figure_save_path
+                        ):  # if directory not exist, create it
+                            os.makedirs(figure_save_path)
+                        plt.savefig(
+                            os.path.join(figure_save_path, "{}".format(dir_1[j])),
+                            bbox_inches="tight",
+                            pad_inches=-0.1,
+                        )
+                        plt.close()  # close figures, so the plot will not display
+
 
 # binarize the images
 def improve_reso(k):
@@ -143,105 +162,114 @@ def improve_reso(k):
     Parameters
     ----------
     k: number
-        input a iterate number   
+        input a iterate number
     """
-    path="./train_set/"
-    dirs=os.listdir(path) #walk through all files in path
-    n=len(dirs)
-    if k<n:
-        N=k
+    path = "./train_set/"
+    dirs = os.listdir(path)  # walk through all files in path
+    n = len(dirs)
+    if k < n:
+        N = k
     else:
-        N=n
-    for i in range(0,N):#walk through specified number of files
-        name=path+dirs[i]+"/masks/"
-        dirss=os.listdir(name)
-        nn=len(dirss)
-        for j in range(0,nn):
-            names=name+dirss[j]
-            mask=io.imread(names) # read images
+        N = n
+    for i in range(0, N):  # walk through specified number of files
+        name = path + dirs[i] + "/masks/"
+        dirss = os.listdir(name)
+        nn = len(dirss)
+        for j in range(0, nn):
+            names = name + dirss[j]
+            mask = io.imread(names)  # read images
             # need to binarize the images, convert all values above 0 to 1 to assign a pixel value of 1 for class
-            masked=np.where(mask>0,1,mask) 
-            plt.imshow(masked,cmap='gray')
-            plt.axis('off')
-            figure_save_path ='train_set/'+dirs[i]+'/masks/'   
-            plt.savefig(os.path.join(figure_save_path , '{}'.format(dirss[j])), bbox_inches='tight', pad_inches = -0.1)
-            plt.close() # reduce memory
+            masked = np.where(mask > 0, 1, mask)
+            plt.imshow(masked, cmap="gray")
+            plt.axis("off")
+            figure_save_path = "train_set/" + dirs[i] + "/masks/"
+            plt.savefig(
+                os.path.join(figure_save_path, "{}".format(dirss[j])),
+                bbox_inches="tight",
+                pad_inches=-0.1,
+            )
+            plt.close()  # reduce memory
 
-#count the number of pictures                        
-def num(dirname=''):
+
+# count the number of pictures
+def num(dirname=""):
     """
     count the number of the PLA data in the directory
-    
+
     Parameters
     ----------
     dirname: string
         The dir of the files
-    
+
     Returns
     ----------
     The total number of the tifs in the whole directory
     """
-    
-    if dirname!='':#if dirname is not empty, use given dir
-        dirname=dirname
-    else:#if dirname is empty
-        dirname='./'+dirname
-    dirs=os.listdir(dirname)#read all sub-folders' names in dirname folder
-    n_files=len(dirs)
-    n=0
-    for i in range(0,n_files):
-        if dirs[i]!='.DS_Store':
-            dataname=dirname+dirs[i]+'/'
-            data=dataname+'tifs/'
-            dir_1=os.listdir(data)#read all PLA pictures' names
-            k=len(dir_1)
-            for j in range(0,k):
-                if dir_1[j]!='.DS_Store':
-                    n+=1
+
+    if dirname != "":  # if dirname is not empty, use given dir
+        dirname = dirname
+    else:  # if dirname is empty
+        dirname = "./" + dirname
+    dirs = os.listdir(dirname)  # read all sub-folders' names in dirname folder
+    n_files = len(dirs)
+    n = 0
+    for i in range(0, n_files):
+        if dirs[i] != ".DS_Store":
+            dataname = dirname + dirs[i] + "/"
+            data = dataname + "tifs/"
+            dir_1 = os.listdir(data)  # read all PLA pictures' names
+            k = len(dir_1)
+            for j in range(0, k):
+                if dir_1[j] != ".DS_Store":
+                    n += 1
     return n
 
-#cell segmentation
+
+# cell segmentation
 # modified based on "Image Segmentation with Watershed Algorithm"
 # https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_watershed/py_watershed.html
-def sep_count_cells(filename=''):
+def sep_count_cells(filename=""):
     """
-    separate the cells that overlap with each other and count the number of cells 
-    
+    separate the cells that overlap with each other and count the number of cells
+
     Parameters
     ----------
     filename: string
         The name of the files
-    
+
     """
-    paths=filename
+    paths = filename
     image = cv2.imread(paths)
     # perform pyramid mean shift filtering to help the thresholding step
     shifted = cv2.pyrMeanShiftFiltering(image, 20, 55)
-	# convert image to grayscale
+    # convert image to grayscale
     gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
     # apply OTSU thresholding
-    thresh = cv2.threshold(gray, 0, 255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-	# compute Euclidean distance from every binary pixel to the nearest zero pixel
+    thresh = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    # compute Euclidean distance from every binary pixel to the nearest zero pixel
     d = ndimage.distance_transform_edt(thresh)
-    #find peaks in distance map
+    # find peaks in distance map
     localMax = peak_local_max(d, indices=False, min_distance=50, labels=thresh)
-	# perform connected component analysis on the local peaks
+    # perform connected component analysis on the local peaks
     marker = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
     # appy Watershed method
     label = watershed(-d, marker, mask=thresh)
-    #print("Note: {} unique segments found".format(len(np.unique(labels)) - 1))
-    plt.figure(figsize=(10,10))
-    plt.imshow(label, cmap=plt.cm.nipy_spectral)# give different colors with label 0 and 1
-    plt.axis('off') 
+    # print("Note: {} unique segments found".format(len(np.unique(labels)) - 1))
+    plt.figure(figsize=(10, 10))
+    plt.imshow(
+        label, cmap=plt.cm.nipy_spectral
+    )  # give different colors with label 0 and 1
+    plt.axis("off")
 
-#do data augmentation
+
+# do data augmentation
 # modified based on Abhinav Sagar, "Nucleus Segmentation using U-Net",
-# accessed from https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4	
-def data_aug(X_train,Y_train):
+# accessed from https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
+def data_aug(X_train, Y_train):
     """
-    build data augmentation to avoid the overfitting of the model 
+    build data augmentation to avoid the overfitting of the model
     and also to increase the ability of model to generalize.
-    
+
     Parameters
     ----------
     X_train: numpy array
@@ -253,36 +281,63 @@ def data_aug(X_train,Y_train):
     The augmented data of x, y, x validation and y validation data sets
     """
     # Creating the training Image and Mask generator (zoom in range[0.8,1.2])
-    image_datagen = image.ImageDataGenerator(shear_range=0.5, rotation_range=50, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2, fill_mode='reflect')
-    mask_datagen = image.ImageDataGenerator(shear_range=0.5, rotation_range=50, zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2, fill_mode='reflect')
+    image_datagen = image.ImageDataGenerator(
+        shear_range=0.5,
+        rotation_range=50,
+        zoom_range=0.2,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        fill_mode="reflect",
+    )
+    mask_datagen = image.ImageDataGenerator(
+        shear_range=0.5,
+        rotation_range=50,
+        zoom_range=0.2,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        fill_mode="reflect",
+    )
 
     # Keep the same seed for image and mask generators so they fit together
-    image_datagen.fit(X_train[:int(X_train.shape[0]*0.9)], augment=True, seed=42) #90% train data to fit
-    mask_datagen.fit(Y_train[:int(Y_train.shape[0]*0.9)], augment=True, seed=42)
+    image_datagen.fit(
+        X_train[: int(X_train.shape[0] * 0.9)], augment=True, seed=42
+    )  # 90% train data to fit
+    mask_datagen.fit(Y_train[: int(Y_train.shape[0] * 0.9)], augment=True, seed=42)
 
     # flow method generate batch of augmented data
-    x=image_datagen.flow(X_train[:int(X_train.shape[0]*0.9)],batch_size=10,shuffle=True, seed=42)
-    y=mask_datagen.flow(Y_train[:int(Y_train.shape[0]*0.9)],batch_size=10,shuffle=True, seed=42)
+    x = image_datagen.flow(
+        X_train[: int(X_train.shape[0] * 0.9)], batch_size=10, shuffle=True, seed=42
+    )
+    y = mask_datagen.flow(
+        Y_train[: int(Y_train.shape[0] * 0.9)], batch_size=10, shuffle=True, seed=42
+    )
 
     # Creating the validation Image and Mask generator
     image_datagen_val = image.ImageDataGenerator()
     mask_datagen_val = image.ImageDataGenerator()
 
-    image_datagen_val.fit(X_train[int(X_train.shape[0]*0.9):], augment=True, seed=42) #other 10% apart from 90%
-    mask_datagen_val.fit(Y_train[int(Y_train.shape[0]*0.9):], augment=True, seed=42)
+    image_datagen_val.fit(
+        X_train[int(X_train.shape[0] * 0.9) :], augment=True, seed=42
+    )  # other 10% apart from 90%
+    mask_datagen_val.fit(Y_train[int(Y_train.shape[0] * 0.9) :], augment=True, seed=42)
 
-    x_val=image_datagen_val.flow(X_train[int(X_train.shape[0]*0.9):],batch_size=10,shuffle=True, seed=42)
-    y_val=mask_datagen_val.flow(Y_train[int(Y_train.shape[0]*0.9):],batch_size=10,shuffle=True, seed=42)
+    x_val = image_datagen_val.flow(
+        X_train[int(X_train.shape[0] * 0.9) :], batch_size=10, shuffle=True, seed=42
+    )
+    y_val = mask_datagen_val.flow(
+        Y_train[int(Y_train.shape[0] * 0.9) :], batch_size=10, shuffle=True, seed=42
+    )
 
-    return x,y,x_val,y_val
+    return x, y, x_val, y_val
 
-#build U-net model
+
+# build U-net model
 # modified based on Abhinav Sagar, "Nucleus Segmentation using U-Net",
-# accessed from https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4	
+# accessed from https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
 def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
     """
     build the U-net model
-    
+
     Parameters
     ----------
     IMG_HEIGHT: number
@@ -296,85 +351,93 @@ def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
     The build-in U-net model
     """
 
-
     inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
-    s = Lambda(lambda x: x / 255) (inputs)
+    s = Lambda(lambda x: x / 255)(inputs)
 
-    c1 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (s)
-    c1 = Dropout(0.1) (c1)
-    c1 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c1)
-    p1 = MaxPooling2D((2, 2)) (c1)
+    c1 = Conv2D(
+        16, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(s)
+    c1 = Dropout(0.1)(c1)
+    c1 = Conv2D(
+        16, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c1)
+    p1 = MaxPooling2D((2, 2))(c1)
 
-    c2 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p1)
-    c2 = Dropout(0.1) (c2)
-    c2 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c2)
-    p2 = MaxPooling2D((2, 2)) (c2)
+    c2 = Conv2D(
+        32, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(p1)
+    c2 = Dropout(0.1)(c2)
+    c2 = Conv2D(
+        32, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c2)
+    p2 = MaxPooling2D((2, 2))(c2)
 
-    c3 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p2)
-    c3 = Dropout(0.2) (c3)
-    c3 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c3)
-    p3 = MaxPooling2D((2, 2)) (c3)
+    c3 = Conv2D(
+        64, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(p2)
+    c3 = Dropout(0.2)(c3)
+    c3 = Conv2D(
+        64, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c3)
+    p3 = MaxPooling2D((2, 2))(c3)
 
-    c4 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p3)
-    c4 = Dropout(0.2) (c4)
-    c4 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c4)
-    p4 = MaxPooling2D(pool_size=(2, 2)) (c4)
+    c4 = Conv2D(
+        128, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(p3)
+    c4 = Dropout(0.2)(c4)
+    c4 = Conv2D(
+        128, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c4)
+    p4 = MaxPooling2D(pool_size=(2, 2))(c4)
 
-    c5 = Conv2D(256, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (p4)
-    c5 = Dropout(0.3) (c5)
-    c5 = Conv2D(256, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c5)
+    c5 = Conv2D(
+        256, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(p4)
+    c5 = Dropout(0.3)(c5)
+    c5 = Conv2D(
+        256, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c5)
 
-    u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same') (c5)
+    u6 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding="same")(c5)
     u6 = concatenate([u6, c4])
-    c6 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u6)
-    c6 = Dropout(0.2) (c6)
-    c6 = Conv2D(128, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c6)
+    c6 = Conv2D(
+        128, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(u6)
+    c6 = Dropout(0.2)(c6)
+    c6 = Conv2D(
+        128, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c6)
 
-    u7 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same') (c6)
+    u7 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding="same")(c6)
     u7 = concatenate([u7, c3])
-    c7 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u7)
-    c7 = Dropout(0.2) (c7)
-    c7 = Conv2D(64, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c7)
+    c7 = Conv2D(
+        64, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(u7)
+    c7 = Dropout(0.2)(c7)
+    c7 = Conv2D(
+        64, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c7)
 
-    u8 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same') (c7)
+    u8 = Conv2DTranspose(32, (2, 2), strides=(2, 2), padding="same")(c7)
     u8 = concatenate([u8, c2])
-    c8 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u8)
-    c8 = Dropout(0.1) (c8)
-    c8 = Conv2D(32, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c8)
+    c8 = Conv2D(
+        32, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(u8)
+    c8 = Dropout(0.1)(c8)
+    c8 = Conv2D(
+        32, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c8)
 
-    u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same') (c8)
-    u9 = concatenate([u9, c1], axis=3)#axis?
-    c9 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (u9)
-    c9 = Dropout(0.1) (c9)
-    c9 = Conv2D(16, (3, 3), activation='elu', kernel_initializer='he_normal', padding='same') (c9)
+    u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding="same")(c8)
+    u9 = concatenate([u9, c1], axis=3)  # axis?
+    c9 = Conv2D(
+        16, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(u9)
+    c9 = Dropout(0.1)(c9)
+    c9 = Conv2D(
+        16, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
+    )(c9)
 
-    outputs = Conv2D(1, (1, 1), activation='sigmoid') (c9)
+    outputs = Conv2D(1, (1, 1), activation="sigmoid")(c9)
 
     return Model(inputs=[inputs], outputs=[outputs])
-
-
-#count the number of items in test set
-def count(test_ids,test_path):
-    """
-    count the number of items in test set
-    
-    Parameters
-    ----------
-    test_ids: string
-        the file names in test set
-    test_path: string
-        directory of the test set    
-
-    Returns
-    ----------
-    Total number of items in test set
-    """
-    ID=0
-    ID_dir={}
-    for id_ in test_ids:
-        dirs=os.listdir(test_path + id_+'/images/')
-        k=len(dirs)
-        for i in range(0,k): 
-            ID_dir[ID]=dirs[i]
-            ID+=1  
-        return ID_dir     
