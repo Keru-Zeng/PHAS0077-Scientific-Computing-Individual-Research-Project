@@ -35,16 +35,25 @@ train_model_old and test_model_old are used to build old model and predict and s
 train_model_new and test_model_new are used to build new model and predict and segment cells using new model.
 
 ## Dependency
-name                      version
+
 tensorflow                2.6.0
+
 keras                     2.6.0
+
 black                     22.6.0
+
 scikit-image              0.19.2
+
 scipy                     1.7.3
+
 pims                      0.6.1
+
 opencv-python             4.6.0.66
+
 numpy                     1.21.5
+
 matplotlib                3.5.2
+
 tqdm                      4.64.0
 
 ## Reference
