@@ -12,7 +12,8 @@ from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.morphology import closing, square
 from skimage.color import label2rgb
-from functions import *
+from model_functions import *
+from premodel_functions import *
 
 # load test path and test items
 test_path = "./test_set/"

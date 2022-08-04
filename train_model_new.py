@@ -8,7 +8,8 @@ from tqdm import tqdm
 from skimage.io import imread
 from skimage.transform import resize
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from functions import *
+from model_functions import *
+from premodel_functions import *
 
 # set useful parameters
 batch_size = 10
