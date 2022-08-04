@@ -33,7 +33,6 @@ def stackloader(filename, dir_in="", plot=True):
         data = pims.TiffStack(
             dir_in + filename
         )  # if the dir is not empty, use the dir to open the tif
-
     nuclei = np.array(data[1::2])  # start from 1 with step 2, i.e.1,3,5,7,9...
     nps = np.array(data[::2])  # start from 0 with step size 2, i.e. 0,2,4,6,8...
     z_size, y_size, x_size = np.shape(nuclei)  # shape the nuclei data (a square matrix)
@@ -142,10 +141,10 @@ def filefolder(dirname="", plot=True):
                         plt.close()  # close figures, so the plot will not display
 
 
-# binarize the images
+# binarize the images in train set
 def improve_reso(k):
     """
-    In order to do a binary classification, convert all values in images above 0 to 1.
+    In order to do a binary classification with train set data, convert all values in images above 0 to 1.
     So, picture only have two values {0,1}, which have more accurate resolution.
 
     Parameters
