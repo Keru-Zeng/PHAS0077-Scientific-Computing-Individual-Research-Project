@@ -27,7 +27,7 @@ for id_ in tqdm(test_ids, total=len(test_ids)):
     for i in range(0, k):
         image = imread(path + dir_3[i])[:, :, :3]  # load the pictures
         image = rgb2gray(image)  # convert to greyscale after loading
-        thresh = threshold_otsu(image)  # perform automatic thresholding
+        thresh = threshold_otsu(image)  # perform automatic OTSU thresholding
         bw = closing(image > thresh, square(3))  # convert 0，1 to bool
         # remove artifacts connected to image border
         cleared = clear_border(bw)

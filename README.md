@@ -28,7 +28,7 @@ premodel_functions contains some functions which are useful in writting report a
 
 model_functions contains useful functions which will be used in training model.
 
-label_cell_segmentation is another segment method which could be regarded as traditional method apart from U-net.
+label_cell_segmentation is another segment method which could be regarded as traditional OTSU method apart from U-net.
 
 train_model_old and test_model_old are used to build old model and predict and segment cells using old model.
 

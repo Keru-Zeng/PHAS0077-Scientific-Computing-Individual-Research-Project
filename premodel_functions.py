@@ -26,13 +26,11 @@ def stackloader(filename, dir_in="", plot=True):
     """
     # load data
     if dir_in == "":
-        data = pims.TiffStack(
-            "./" + filename
-        )  # if the tif in the same folder as the code does.
+        # if the tif in the same folder as the code does.
+        data = pims.TiffStack("./" + filename)
     else:
-        data = pims.TiffStack(
-            dir_in + filename
-        )  # if the dir is not empty, use the dir to open the tif
+        # if the dir is not empty, use the dir to open the tif
+        data = pims.TiffStack(dir_in + filename)
     nuclei = np.array(data[1::2])  # start from 1 with step 2, i.e.1,3,5,7,9...
     nps = np.array(data[::2])  # start from 0 with step size 2, i.e. 0,2,4,6,8...
     z_size, y_size, x_size = np.shape(nuclei)  # shape the nuclei data (a square matrix)
@@ -44,14 +42,10 @@ def stackloader(filename, dir_in="", plot=True):
         for n in range(z_size):
             i = n // ncols
             j = n % ncols
-            axes[i, j].imshow(
-                nuclei[n], interpolation="nearest", cmap="gray"
-            )  # total 20 necleis,total 20 pictures
-        for (
-            ax
-        ) in (
-            axes.ravel()
-        ):  # returns contiguous flattened array(ravel() return an array to 1D)
+            # total 20 necleis,total 20 pictures
+            axes[i, j].imshow(nuclei[n], interpolation="nearest", cmap="gray")
+        # returns contiguous flattened array(ravel() return an array to 1D)
+        for ax in axes.ravel():
             if not (len(ax.images)):
                 fig.delaxes(ax)  # remove the Axes ax from its figure.
         fig.tight_layout()
@@ -79,9 +73,8 @@ def plotpic(filename, dir_in="", plot=True):
     if dir_in == "":
         data = "./" + filename  # if PLA data in the same folder as the code does.
     else:
-        data = (
-            dir_in + filename
-        )  # if directory not empty, use directory to open the picture
+        # if directory not empty, use directory to open the picture
+        data = dir_in + filename
     IM = io.imread(data)[10]
     IM_MAX = np.max(IM, axis=0)
     IM_MAX = resize(IM_MAX, (512, 512), mode="constant", preserve_range=True)
@@ -126,12 +119,10 @@ def filefolder(dirname="", plot=True):
                     if plot == True:
                         plt.imshow(IM_MAX, cmap="gray")
                         plt.axis("off")
-                        figure_save_path = (
-                            "test_set/" + dirs[i] + "/images/"
-                        )  # dir to save pictures
-                        if not os.path.exists(
-                            figure_save_path
-                        ):  # if directory not exist, create it
+                        # dir to save pictures
+                        figure_save_path = "test_set/" + dirs[i] + "/images/"
+                        # if directory not exist, create it
+                        if not os.path.exists(figure_save_path):
                             os.makedirs(figure_save_path)
                         plt.savefig(
                             os.path.join(figure_save_path, "{}".format(dir_1[j])),
