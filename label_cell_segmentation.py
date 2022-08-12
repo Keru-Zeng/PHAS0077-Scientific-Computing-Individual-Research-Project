@@ -29,7 +29,7 @@ for id_ in tqdm(test_ids, total=len(test_ids)):
         image = rgb2gray(image)  # convert to greyscale after loading
         thresh = threshold_otsu(image)  # perform automatic OTSU thresholding
         bw = closing(image > thresh, square(3))  # convert 0，1 to bool
-        # remove artifacts connected to image border
+        # remove artifacts connected
         cleared = clear_border(bw)
         # label image regions
         label_image = label(cleared)
@@ -38,7 +38,6 @@ for id_ in tqdm(test_ids, total=len(test_ids)):
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.imshow(image_label_overlay)
         for region in regionprops(label_image):
-            # take regions with large enough areas
             if region.area >= 150:
                 # draw rectangle around segment cells
                 minr, minl, maxr, maxl = region.bbox

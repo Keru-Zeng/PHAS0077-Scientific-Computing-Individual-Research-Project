@@ -67,3 +67,5 @@ These codes are modified base on
 ,which could be accessed from: https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
 
 and "Label image regions", which could be accessd from https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_label.html
+
+and Adrian Rosebrock,"Watershed OpenCV", 2015, accessed from https://pyimagesearch.com/2015/11/02/watershed-opencv/
