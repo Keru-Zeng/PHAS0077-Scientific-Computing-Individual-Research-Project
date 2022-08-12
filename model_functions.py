@@ -49,6 +49,7 @@ def num(dirname=""):
 
 
 # cell segmentation
+# modified based on https://pyimagesearch.com/2015/11/02/watershed-opencv/
 def sep_count_cells(filename=""):
     """
     separate the cells that overlap with each other and count the number of cells
