@@ -62,25 +62,23 @@ def sep_count_cells(filename=""):
     """
     paths = filename
     image = cv2.imread(paths)
-    # perform pyramid mean shift filtering to help the thresholding step
+    # perform pyramid mean shift filtering
     shifted = cv2.pyrMeanShiftFiltering(image, 20, 55)
     # convert image to grayscale
     gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
     # apply OTSU thresholding
     thresh = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    # compute Euclidean distance from every binary pixel to the nearest zero pixel
+    # compute Euclidean distance to the nearest zero pixel from binary pixel
     d = ndimage.distance_transform_edt(thresh)
-    # find peaks in distance map
+    # find peaks
     localMax = peak_local_max(d, indices=False, min_distance=50, labels=thresh)
     # perform connected component analysis on the local peaks
     marker = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
     # appy Watershed method
     label = watershed(-d, marker, mask=thresh)
-    # print("Note: {} unique segments found".format(len(np.unique(labels)) - 1))
     plt.figure(figsize=(10, 10))
-    plt.imshow(
-        label, cmap=plt.cm.nipy_spectral
-    )  # give different colors with label 0 and 1
+    # give different colors with label 0 and 1
+    plt.imshow(label, cmap=plt.cm.nipy_spectral)
     plt.axis("off")
 
 
