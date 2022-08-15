@@ -12,23 +12,13 @@ People should run train_model_old first and then run test_model_old to see segme
 stage1_train is the folder to train the model used by Abhinav Sagar. 
 
 tifs_unanalysed is the folder store PLA images and the train_set and test_set are construct from it. Moreover, masks in train_set are built by label-studio:
-@misc{Label Studio,
-  title={{Label Studio}: Data labeling software},
-  url={https://github.com/heartexlabs/label-studio},
-  note={Open source software available from https://github.com/heartexlabs/label-studio},
-  author={
-    Maxim Tkachenko and
-    Mikhail Malyuk and
-    Andrey Holmanyuk and
-    Nikolai Liubimov},
-  year={2020-2022},
-}
+Maxim Tkachenko, Mikhail Malyuk, Andrey Holmanyuk and Nikolai Liubimov, "Label Studio: Data labeling software", 2020-2022, accessed from https://github.com/heartexlabs/label-studio.
 
-premodel_functions contains some functions which are useful in writting report and example_pre_model is an example to show the result in it.
+premodel_functions contains some functions which are useful in writting the report and example_pre_model is an example to show the result of it.
 
 model_functions contains useful functions which will be used in training model.
 
-label_cell_segmentation is another segment method which could be regarded as traditional OTSU method apart from U-net.
+label_cell_segmentation is Otsu method to segment the cells.
 
 train_model_old and test_model_old are used to build old model and predict and segment cells using old model.
 
@@ -57,15 +47,9 @@ matplotlib                3.5.2
 tqdm                      4.64.0
 
 ## Reference
-These codes are modified base on 
-@misc{sagarkaggle,
-  Author = {Abhinav Sagar},
-  Title = {Kaggle Solutions},
-  Year = {2019},
-  Journal = {Github},
-}
-,which could be accessed from: https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4
+These codes are modified base on: 
+1. Sagar, Abhinav. “Nucleus Segmentation using U-Net: How can deep learning be used for segmenting medical images?”, 2019. Accessed from https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4. 
 
-and "Label image regions", which could be accessd from https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_label.html
+2. "Label image regions", accessd from https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_label.html
 
-and Adrian Rosebrock,"Watershed OpenCV", 2015, accessed from https://pyimagesearch.com/2015/11/02/watershed-opencv/
+3. Adrian Rosebrock. "Watershed OpenCV", 2015. Accessed from https://pyimagesearch.com/2015/11/02/watershed-opencv/
