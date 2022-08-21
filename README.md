@@ -11,12 +11,12 @@ People should run train_model_old first and then run test_model_old to see segme
 ## Detail Explanation
 stage1_train is the folder to train the model used by Abhinav Sagar. 
 
-tifs_unanalysed is the folder store PLA images and the train_set and test_set are construct from it. Moreover, masks in train_set are built by label-studio:
+tifs_unanalysed is the folder to store some sample of PLA images and the train_set and test_set are construct from it. Moreover, masks in train_set are built by label-studio:
 Maxim Tkachenko, Mikhail Malyuk, Andrey Holmanyuk and Nikolai Liubimov, "Label Studio: Data labeling software", 2020-2022, accessed from https://github.com/heartexlabs/label-studio.
 
-premodel_functions contains some functions which are useful in writting the report and example_pre_model is an example to show the result of it.
+premodel_functions contains some functions which are useful in writting the report such as how to transform PLA into 2D inputs and example_pre_model is an example to show the result of it, which will be shown in report.
 
-model_functions contains useful functions which will be used in training model.
+model_functions contains some useful functions which will be used in training models.
 
 label_cell_segmentation is Otsu method to segment the cells.
 
