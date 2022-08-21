@@ -8,6 +8,8 @@ People should run train_model_new first and then run test_model_new to see segme
 
 People should run train_model_old first and then run test_model_old to see segmented cells using old model.
 
+The results will be shown in the folders: sep_set and pred_set.
+
 ## Detail Explanation
 stage1_train is the folder to train the model used by Abhinav Sagar. 
 
