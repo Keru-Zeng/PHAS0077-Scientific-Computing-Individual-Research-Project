@@ -67,7 +67,7 @@ def sep_count_cells(filename=""):
     # convert image to grayscale
     gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
     # apply OTSU thresholding
-    thresh = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    thresh = cv2.threshold(gray, 0, 254, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     # calculate the binary pixel's Euclidean distance to the nearest zero pixel.
     d = ndimage.distance_transform_edt(thresh)
     # find peaks
