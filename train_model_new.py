@@ -58,8 +58,7 @@ model.summary()
 # fit the model
 # Stop training when a monitored metric has stopped improving.
 earlystopper = EarlyStopping(patience=2, verbose=1)
-# save a model or weights (in a checkpoint file) at some interval,
-# so the model or weights can be loaded later to continue the training from the state saved.
+# save a model
 checkpointer = ModelCheckpoint("model_new.h5", verbose=1, save_best_only=True)
 # Use fit_generator(), since there are data argumentations (default batch size is 32)
 results = model.fit_generator(
@@ -75,12 +74,12 @@ results.history
 # save loss and accuracy
 mse = np.array((results.history["loss"]))
 val_mse = np.array((results.history["val_loss"]))
-# np.save('loss.npy', mse)
-# np.save('val_loss.npy', val_mse)
+np.save("loss.npy", mse)
+np.save("val_loss.npy", val_mse)
 acc = np.array((results.history["accuracy"]))
 val_acc = np.array((results.history["val_accuracy"]))
-# np.save('acc.npy', acc)
-# np.save('val_acc.npy', val_acc)
+np.save("acc.npy", acc)
+np.save("val_acc.npy", val_acc)
 
 # summarize history and plot the relevant data
 plt.figure(figsize=(12, 12))
@@ -90,13 +89,13 @@ plt.plot(results.history["val_accuracy"])
 plt.title("model accuracy", fontsize=14)
 plt.ylabel("accuracy", fontsize=14)
 plt.xlabel("epoch", fontsize=14)
-plt.legend(["train_set", "vali_set"], loc="upper right", fontsize=14)
+plt.legend(["train_set", "val_set"], loc="upper right", fontsize=14)
 plt.subplot(212)
 plt.plot(results.history["loss"])
 plt.plot(results.history["val_loss"])
 plt.title("model loss", fontsize=14)
 plt.ylabel("loss", fontsize=14)
 plt.xlabel("epoch", fontsize=14)
-plt.legend(["train_set", "vali_set"], loc="upper right", fontsize=14)
+plt.legend(["train_set", "val_set"], loc="upper right", fontsize=14)
 plt.show()
 plt.savefig("summary_new.png")
