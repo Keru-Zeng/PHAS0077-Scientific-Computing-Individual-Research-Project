@@ -19,14 +19,14 @@ from premodel_functions import *
 test_path = "./test_set/"
 test_ids = next(os.walk(test_path))[1]
 
-# traditional method to label the cell segmentation
+# OTSU method to label the cell segmentation
 for id_ in tqdm(test_ids, total=len(test_ids)):
     path = test_path + id_ + "/images/"
     dir_3 = os.listdir(path)
     k = len(dir_3)
     for i in range(0, k):
         image = imread(path + dir_3[i])[:, :, :3]  # load the pictures
-        image = rgb2gray(image)  # convert to greyscale after loading
+        image = rgb2gray(image)  # convert to greyscale
         thresh = threshold_otsu(image)  # perform automatic OTSU thresholding
         bw = closing(image > thresh, square(3))  # convert 0，1 to bool
         # remove artifacts connected
@@ -39,7 +39,7 @@ for id_ in tqdm(test_ids, total=len(test_ids)):
         ax.imshow(image_label_overlay)
         for region in regionprops(label_image):
             if region.area >= 150:
-                # draw rectangle around segment cells
+                # draw rectangle around segmented cells to count them
                 minr, minl, maxr, maxl = region.bbox
                 rect = mpatches.Rectangle(
                     (minl, minr),

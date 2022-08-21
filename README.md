@@ -46,6 +46,12 @@ matplotlib                3.5.2
 
 tqdm                      4.64.0
 
+## Other useful Dependency
+
+h5py                      3.7.0
+
+pyqt5                     5.15.7
+
 ## Reference
 These codes are modified base on: 
 1. Sagar, Abhinav. “Nucleus Segmentation using U-Net: How can deep learning be used for segmenting medical images?”, 2019. Accessed from https://towardsdatascience.com/nucleus-segmentation-using-u-net-eceb14a9ced4. 
