@@ -26,7 +26,7 @@ def num(dirname=""):
 
     Returns
     ----------
-    The total number of the tifs in the whole directory
+    The total number of the images in the whole directory
     """
 
     if dirname != "":  # if dirname is not empty, use given dir
@@ -52,7 +52,7 @@ def num(dirname=""):
 # modified based on https://pyimagesearch.com/2015/11/02/watershed-opencv/
 def sep_count_cells(filename=""):
     """
-    separate the cells that overlap with each other and count the number of cells
+    separate the cells that overlapping with each other by using watershed and Otsu method and then plot them.
 
     Parameters
     ----------
@@ -68,7 +68,7 @@ def sep_count_cells(filename=""):
     gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
     # apply OTSU thresholding
     thresh = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    # compute Euclidean distance to the nearest zero pixel from binary pixel
+    # calculate the binary pixel's Euclidean distance to the nearest zero pixel.
     d = ndimage.distance_transform_edt(thresh)
     # find peaks
     localMax = peak_local_max(d, indices=False, min_distance=50, labels=thresh)
@@ -93,9 +93,9 @@ def data_aug(X_train, Y_train):
     Parameters
     ----------
     X_train: numpy array
-        The X train set of data
+        The training set of data
     Y_train: numpy array
-        The Y train set of data
+        The binary classifier set of data, contains {0,1}
     Returns
     ----------
     The augmented data of x, y, x validation and y validation data sets
@@ -119,9 +119,7 @@ def data_aug(X_train, Y_train):
     )
 
     # Keep the same seed for image and mask generators so they fit together
-    image_datagen.fit(
-        X_train[: int(X_train.shape[0] * 0.9)], augment=True, seed=42
-    )  # 90% train data to fit
+    image_datagen.fit(X_train[: int(X_train.shape[0] * 0.9)], augment=True, seed=42)
     mask_datagen.fit(Y_train[: int(Y_train.shape[0] * 0.9)], augment=True, seed=42)
 
     # flow method generate batch of augmented data
@@ -136,9 +134,7 @@ def data_aug(X_train, Y_train):
     image_datagen_val = image.ImageDataGenerator()
     mask_datagen_val = image.ImageDataGenerator()
 
-    image_datagen_val.fit(
-        X_train[int(X_train.shape[0] * 0.9) :], augment=True, seed=42
-    )  # other 10% apart from 90%
+    image_datagen_val.fit(X_train[int(X_train.shape[0] * 0.9) :], augment=True, seed=42)
     mask_datagen_val.fit(Y_train[int(Y_train.shape[0] * 0.9) :], augment=True, seed=42)
 
     x_val = image_datagen_val.flow(
@@ -249,7 +245,7 @@ def trainU_net(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS):
     )(c8)
 
     u9 = Conv2DTranspose(16, (2, 2), strides=(2, 2), padding="same")(c8)
-    u9 = concatenate([u9, c1], axis=3)  # axis?
+    u9 = concatenate([u9, c1], axis=3)
     c9 = Conv2D(
         16, (3, 3), activation="elu", kernel_initializer="he_normal", padding="same"
     )(u9)
