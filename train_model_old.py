@@ -39,7 +39,7 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
     mask1 = np.zeros((img_height, img_width, 1), dtype=np.bool)
     for masks in next(os.walk(path + "/masks/"))[2]:
         mask = imread(path + "/masks/" + masks)
-        # Compress the picture to form one picture
+        # Compress the picture to form one 2D picture
         mask = np.expand_dims(
             resize(mask, (img_height, img_width), mode="constant", preserve_range=True),
             axis=-1,
@@ -77,12 +77,12 @@ results.history
 # save loss and accuracy
 mse = np.array((results.history["loss"]))
 val_mse = np.array((results.history["val_loss"]))
-# np.save('loss.npy', mse)
-# np.save('val_loss.npy', val_mse)
+np.save("loss.npy", mse)
+np.save("val_loss.npy", val_mse)
 acc = np.array((results.history["accuracy"]))
 val_acc = np.array((results.history["val_accuracy"]))
-# np.save('acc.npy', acc)
-# np.save('val_acc.npy', val_acc)
+np.save("acc.npy", acc)
+np.save("val_acc.npy", val_acc)
 
 # summarize history and plot the relevant data
 plt.figure(figsize=(12, 12))
@@ -92,13 +92,13 @@ plt.plot(results.history["val_accuracy"])
 plt.title("model accuracy", fontsize=14)
 plt.ylabel("accuracy", fontsize=14)
 plt.xlabel("epoch", fontsize=14)
-plt.legend(["train_set", "vali_set"], loc="upper right", fontsize=14)
+plt.legend(["train_set", "val_set"], loc="upper right", fontsize=14)
 plt.subplot(212)
 plt.plot(results.history["loss"])
 plt.plot(results.history["val_loss"])
 plt.title("model loss", fontsize=14)
 plt.ylabel("loss", fontsize=14)
 plt.xlabel("epoch", fontsize=14)
-plt.legend(["train_set", "vali_set"], loc="upper right", fontsize=14)
+plt.legend(["train_set", "val_set"], loc="upper right", fontsize=14)
 plt.show()
 plt.savefig("summary_old.png")
