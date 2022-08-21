@@ -9,7 +9,7 @@ import pims
 # show the 4D PLA and load data
 def stackloader(filename, dir_in="", plot=True):
     """
-    load and seperate 4D PLA pictures into 20 2D figures and then plot them if needed
+    load and seperate 3D PLA pictures into 20 2D figures in one channel and then plot them if needed
 
     Parameters
     ----------
@@ -22,7 +22,7 @@ def stackloader(filename, dir_in="", plot=True):
 
     Returns
     -------
-    There are 4 returns: value of nuclei and nps as well as number of rows and columns
+    There are 4 returns: value of nuclei and nanoparticles(nps) as well as number of rows and columns that will be shown in the plot.
     """
     # load data
     if dir_in == "":
@@ -34,7 +34,6 @@ def stackloader(filename, dir_in="", plot=True):
     nuclei = np.array(data[1::2])  # start from 1 with step 2, i.e.1,3,5,7,9...
     nps = np.array(data[::2])  # start from 0 with step size 2, i.e. 0,2,4,6,8...
     z_size, y_size, x_size = np.shape(nuclei)  # shape the nuclei data (a square matrix)
-    # print(np.shape(data)) #(40,512,521),512 entries in x y axes,with 20 in Z and 2 channel,total 40
     nrows = np.int(np.ceil(np.sqrt(z_size)))
     ncols = np.int(z_size // nrows + 1)
     if plot == True:
@@ -42,7 +41,7 @@ def stackloader(filename, dir_in="", plot=True):
         for n in range(z_size):
             i = n // ncols
             j = n % ncols
-            # total 20 necleis,total 20 pictures
+            # total 20 pictures
             axes[i, j].imshow(nuclei[n], interpolation="nearest", cmap="gray")
         # returns contiguous flattened array(ravel() return an array to 1D)
         for ax in axes.ravel():
@@ -58,7 +57,7 @@ def stackloader(filename, dir_in="", plot=True):
 # Convert PLA data into 2D picture and plot it
 def plotpic(filename, dir_in="", plot=True):
     """
-    convert 4D PLA images into 2D figures and then plot them
+    convert 3D PLA images into 2D figures and then plot them
 
     Parameters
     ----------
@@ -71,11 +70,12 @@ def plotpic(filename, dir_in="", plot=True):
     """
 
     if dir_in == "":
-        data = "./" + filename  # if PLA data in the same folder as the code does.
+        # if PLA data in the same folder as the code does.
+        data = "./" + filename
     else:
         # if directory not empty, use directory to open the picture
         data = dir_in + filename
-    IM = io.imread(data)[10]
+    IM = io.imread(data)[0]
     IM_MAX = np.max(IM, axis=0)
     IM_MAX = resize(IM_MAX, (512, 512), mode="constant", preserve_range=True)
     if plot == True:
@@ -83,10 +83,10 @@ def plotpic(filename, dir_in="", plot=True):
         plt.axis("off")
 
 
-# In folders, change all PLA into 2D pictures and save them.
+# In folders, change all PLA into 2D pictures and save them in the folder.
 def filefolder(dirname="", plot=True):
     """
-    load, plot and save 4D PLA pictures into 2D figures in given folders
+    load and transform 3D PLA pictures into 2D figures and then plot and save them in given folders
 
     Parameters
     ----------
@@ -132,21 +132,21 @@ def filefolder(dirname="", plot=True):
                         plt.close()  # close figures, so the plot will not display
 
 
-# binarize the images in train set
+# binarize the images in training set
 def improve_reso(k):
     """
-    In order to do a binary classification with train set data, convert all values in images above 0 to 1.
+    In order to do a binary classification with training set data, convert all values in images above 0 to 1.
     So, picture only have two values {0,1}, which have more accurate resolution.
 
     Parameters
     ----------
     k: number
-        input a iterate number
+        input a iterate number, so the function will decide how many folders to improve resolution.
     """
-    path = "./train_set/"
+    path = "./train_set/"  # need to run previous functions first
     dirs = os.listdir(path)  # walk through all files in path
     n = len(dirs)
-    if k < n:
+    if k < n:  # decide the number of folders to improve resolution
         N = k
     else:
         N = n
@@ -157,7 +157,8 @@ def improve_reso(k):
         for j in range(0, nn):
             names = name + dirss[j]
             mask = io.imread(names)  # read images
-            # need to binarize the images, convert all values above 0 to 1 to assign a pixel value of 1 for class
+            # need to binarize the images.
+            # To assign a pixel value of 1 for the class, change all values above 0 to 1.
             masked = np.where(mask > 0, 1, mask)
             plt.imshow(masked, cmap="gray")
             plt.axis("off")
