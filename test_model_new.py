@@ -34,9 +34,8 @@ for id_ in tqdm(test_ids, total=len(test_ids)):
     k = len(dir_3)
     for i in range(0, k):
         img = imread(path + dir_3[i])[:, :, :img_channel]
-        sizes_test.append(
-            [img.shape[0], img.shape[1]]
-        )  # append sizes of figures i.e. 256*256 pixel: [256,256]
+        # append sizes of figures i.e. 256*256 pixel: [256,256]
+        sizes_test.append([img.shape[0], img.shape[1]])
         img = resize(img, (img_height, img_width), mode="constant", preserve_range=True)
         X_test[n] = img
         n += 1
